@@ -1,9 +1,12 @@
 import * as functions from 'firebase-functions';
+import { Body } from './types';
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+export const ssr = functions.runWith({ memory: '256MB' }).https.onRequest(async (req, res) => {
+	const data = [].concat(req.body);
+	if (data.some(e => !Body.test(e))) {
+		res.status(400).send();
+		return;
+	}
+
+	res.status(200).send();
+});
